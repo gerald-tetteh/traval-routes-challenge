@@ -61,7 +61,16 @@ class RouteGraph:
         """
         return self._nodes.get(airport_id, None)
     
-    def get_route(self,source,destination):
+    def get_connection(self,key) -> list:
+        """Returns airline ID and number of
+        stops
+
+        Args:
+            key: Key to access connection properties
+        """
+        return self._route_connects.get(key)
+    
+    def get_route(self,source,destination) -> list:
         """Retrun availabel routes from
         source to destination
 

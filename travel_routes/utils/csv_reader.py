@@ -28,7 +28,7 @@ def extract_airlines() -> dict[str,Airline]:
                 continue
             iata_code = airline_data[3].strip()
             location_code = iata_code
-            if(len(iata_code) < 2):
+            if(len(iata_code) < 2 or iata_code == "\\N"):
                 location_code = airline_data[4].strip() #icao code
             if(airlines.get(id) == None):
                 airline = Airline(id,location_code)
@@ -40,6 +40,7 @@ def extract_airports() -> dict[str,Airport]:
     and retruns a dictionary of Airports
     """
     airports = {}
+    airports_alias = {}
     with open(AIRPORTS_FILE) as airports_file:
         for airport_data in csv.reader(airports_file):
             id = int(airport_data[0].strip())
@@ -51,11 +52,12 @@ def extract_airports() -> dict[str,Airport]:
                 continue
             iata_code = airport_data[4].strip()
             location_code = iata_code
-            if(len(iata_code) < 2):
+            if(len(iata_code) < 2 or iata_code == "\\N"):
                 location_code = airport_data[5].strip() #icao code
             airport = Airport(id,location_code)
             airports[f"{city},{country}"] = airport
-    return airports
+            airports_alias[id] = f"{city},{country}"
+    return (airports,airports_alias)
 
 def extract_routes(airlines) -> RouteGraph:
     """Reads available routes from 'ROUTES_FILE'
@@ -98,5 +100,5 @@ def read_files() -> list:
     """
     airlines = extract_airlines()
     route_graph = extract_routes(airlines)
-    airports = extract_airports()
-    return [airlines,route_graph,airports]
+    airports,airports_alias = extract_airports()
+    return [airlines,route_graph,airports,airports_alias]
