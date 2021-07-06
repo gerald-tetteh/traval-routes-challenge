@@ -17,6 +17,9 @@ AIRPORTS_FILE = "airports.csv";
 ROUTES_FILE = "routes.csv";
 
 def extract_airlines() -> dict[str,Airline]:
+    """Reads active airlines from 'AIRLINES_FILE'
+    and retruns a dictionary of Airlines
+    """
     airlines = {}
     with open(AIRLINES_FILE) as airlines_file:
         for airline_data in csv.reader(airlines_file):
@@ -33,6 +36,9 @@ def extract_airlines() -> dict[str,Airline]:
     return airlines
             
 def extract_airports() -> dict[str,Airport]:
+    """Reads all airports from 'AIRPORTS_FILE'
+    and retruns a dictionary of Airports
+    """
     airports = {}
     with open(AIRPORTS_FILE) as airports_file:
         for airport_data in csv.reader(airports_file):
@@ -52,6 +58,9 @@ def extract_airports() -> dict[str,Airport]:
     return airports
 
 def extract_routes(airlines) -> RouteGraph:
+    """Reads available routes from 'ROUTES_FILE'
+    and retruns a RouteGraph
+    """
     route_graph = RouteGraph()
     with open(ROUTES_FILE) as routes_file:
         for route_data in csv.reader(routes_file):
@@ -64,6 +73,7 @@ def extract_routes(airlines) -> RouteGraph:
                 stops = int(route_data[7].strip())
                 source_route_node = None
                 destination_route_node = None
+                # check of node already exists
                 if(route_graph.get_node(destination_airport_id) == None):
                     destination_route_node = RouteNode(destination_airport_id)
                 else:
