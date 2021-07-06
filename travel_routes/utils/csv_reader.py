@@ -91,3 +91,12 @@ def extract_routes(airlines) -> RouteGraph:
             except Exception:
                 continue
     return route_graph
+
+def read_files() -> list:
+    """Reads all data files and retruns
+    Object data
+    """
+    airlines = extract_airlines()
+    route_graph = extract_routes(airlines)
+    airports = extract_airports()
+    return [airlines,route_graph,airports]
