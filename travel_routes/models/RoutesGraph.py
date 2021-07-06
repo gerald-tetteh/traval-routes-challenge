@@ -6,33 +6,53 @@ This class contains a graph of
 all possible routes for source
 to destination
 """
-from collections import defaultdict
 
 class RouteNode:
-    def __init__(self,location_code) -> None:
-        self._location_code = location_code
+    def __init__(self,airport_id) -> None:
+        self._airport_id = airport_id
     
     @property
-    def location_code(self):
-        return self._location_code
+    def airport_id(self) -> int:
+        return self._airport_id
 
 class RouteGraph:
     def __init__(self) -> None:
         """A class representing the routes graph"""
-        self.number_of_nodes = 0
-        self.adjacent_nodes = defaultdict(lambda: False)
+        self._nodes = {}
+        self._number_of_nodes = 0
+        self._adjacent_nodes = {}
     
-    def _add_edge(self,node,airline_id) -> None:
-        """Adds Edge to existing node"""
-        self.adjacent_nodes[node].append([node,airline_id])
+    def add_edge(self,source_node,
+        destination_node,airline_id,stops) -> None:
+        """Adds Edge to existing node
+
+        Args:
+            node: RouteNode
+            airline_id: ID of airline to node
+            source_node: Node of source
+            destination_node: Node of destination
+            stops: Number of additional stops
+        """
+        self._adjacent_nodes[source_node].append([destination_node,
+                airline_id,stops])
     
-    def add_vertex(self,node,airline_id) -> None:
+    def add_vertex(self,source_node,destination_node) -> None:
         """Add a location to the graph
 
         Args:
-            node: A Route Node
+            source_node: Source RouteNode
+            destination_node: Destination RouteNode
         """
-        if(not self.adjacent_nodes[node]):
-            self.adjacent_nodes[node] = []
-        else:
-            self._add_edge(node, airline_id)
+        self._number_of_nodes += 1
+        self._nodes[source_node.airport_id] = source_node
+        self._nodes[destination_node.airport_id] = destination_node
+        self._adjacent_nodes[source_node] = []
+
+    def get_node(self, airport_id) -> RouteNode:
+        """Returns node corresponding to
+        airport ID
+
+        Args:
+            airport_id: Airport ID
+        """
+        return self._nodes.get(airport_id, None)

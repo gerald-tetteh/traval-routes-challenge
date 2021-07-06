@@ -17,4 +17,4 @@ class Airlines:
         Args: 
             id: ID of airline (unique)
         """
-        return self._airlines[id]
+        return self._airlines.get(id)
