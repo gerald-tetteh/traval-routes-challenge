@@ -10,11 +10,14 @@ def main(input_file) -> None:
     try:
       source,destination = read_input(input_file)
     except Exception:
-      print(f"File could not be open, check path {input_file}")
+      print(f"An error occurred, check file path '{input_file}' "\
+          "or contents")
       return
     airlines,route_graph,airports,airports_alias = read_files()
     source_node = route_graph.get_node(airports[source].id)
     destination_node = route_graph.get_node(airports[destination].id)
-    result = route_graph.get_route(source_node,destination_node)
+    result = None
+    if(source_node != None and destination_node != None):
+        result = route_graph.get_route(source_node,destination_node)
     write_to_file(input_file,result,
         route_graph,airlines,airports,airports_alias)

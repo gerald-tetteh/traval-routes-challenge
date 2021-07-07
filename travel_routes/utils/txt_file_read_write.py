@@ -55,10 +55,13 @@ def write_to_file(input_file_name,routes,
     output_file_name = input_file_name.split(".txt")[0] + "_output.txt"
     with open(output_file_name, mode="w") as output_file:
         if (routes == None):
+            output_file.write("Unsupported request.")
             return
+        total_stops = 0
         for i in range(0,len(routes) - 1):
             key = f"{routes[i]},{routes[i+1]}"
             airline_id,stops = route_graph.get_connection(key)
+            total_stops += stops
             airline_code = airlines.get(airline_id
                 ).location_code
             source_airport_code = get_airport_code(airports_alias,
@@ -67,5 +70,11 @@ def write_to_file(input_file_name,routes,
                 airports,routes[i+1].airport_id)
             route = OutputRoute(airline_code,
                 source_airport_code,destination_airport_code,stops)
-            output_file.write(f"{route}\n")
+            if(i == (len(routes) - 2)):
+                output_file.write(f"{i+1}. {route}.\n")
+            else:
+                output_file.write(f"{i+1}. {route}\n")
+        output_file.write(f"Total flights: {len(routes) - 1}\n")
+        output_file.write(f"Total additional stops: {total_stops}\n")
+        output_file.write(f"Optimality criteria: flights")
     return
